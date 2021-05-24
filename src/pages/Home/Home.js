@@ -1,15 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPreferences } from '../../redux/slices/userPreferencesSlice';
+import { fetchSeats } from '../../redux/slices/seatsSlice';
 import { useHistory } from 'react-router';
 
 const Home = () => {
-   const dispatch = useDispatch();
-
    const inputRef = useRef();
    const checkboxRef = useRef();
 
    const history = useHistory();
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      dispatch(fetchSeats());
+   }, [dispatch]);
 
    const handleSubmit = (e) => {
       e.preventDefault();
