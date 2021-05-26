@@ -1,13 +1,22 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import './App.css';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { grey, orange } from '@material-ui/core/colors';
 import Home from './pages/Home/Home';
 import Reservation from './pages/Reservation/Reservation';
+import Summary from './pages/Summary/Summary';
+
+const theme = createMuiTheme({
+   palette: {
+      primary: grey,
+      secondary: orange,
+   },
+});
 
 function App() {
    return (
       <Router>
-         <div className="App">
+         <ThemeProvider theme={theme}>
             <Switch>
                <Route exact path="/">
                   <Home />
@@ -15,8 +24,11 @@ function App() {
                <Route path="/reservation">
                   <Reservation />
                </Route>
+               <Route path="/summary">
+                  <Summary />
+               </Route>
             </Switch>
-         </div>
+         </ThemeProvider>
       </Router>
    );
 }

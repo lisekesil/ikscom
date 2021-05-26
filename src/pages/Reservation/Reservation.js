@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Audience from '../../components/Audience';
+import AudienceFooter from '../../components/AudienceFooter';
 import { seatsSelector } from '../../redux/slices/seatsSlice';
+import Grid from '@material-ui/core/Grid';
+import { useHistory } from 'react-router';
 
 const Reservation = () => {
    const userPreferences = useSelector((state) => state.userPreferences);
    const { seats, loading, hasErrors } = useSelector(seatsSelector);
    const [audienceGrid, setAudienceGrid] = useState();
    const [userSeats, setUserSeats] = useState([]);
+   const history = useHistory();
 
    useEffect(() => {
       createAudienceGrid();
    }, [seats]);
-
-   useEffect(() => {}, [userSeats]);
 
    useEffect(() => {
       if (audienceGrid) {
@@ -79,42 +82,24 @@ const Reservation = () => {
       }
    };
 
+   const handleReservation = () => {
+      history.push('/summary');
+   };
+
    return (
-      <div>
-         <h1>Res</h1>
-         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(15, 50px)', gap: 10 }}>
-            {audienceGrid &&
-               audienceGrid.map((row) => {
-                  return row.map((seat) => {
-                     if (seat) {
-                        return (
-                           <div
-                              onClick={() => bookSeat(seat)}
-                              key={seat.id}
-                              style={{
-                                 width: 50,
-                                 height: 50,
-                                 backgroundColor: seat.reserved
-                                    ? '#555'
-                                    : userSeats.includes(seat)
-                                    ? '#ff0000'
-                                    : '#ebebeb',
-                              }}
-                           >
-                              {seat.cords.x + 'x' + seat.cords.y}
-                           </div>
-                        );
-                     } else {
-                        return (
-                           <div
-                              style={{ width: 50, height: 50, backgroundColor: 'transparent' }}
-                           ></div>
-                        );
-                     }
-                  });
-               })}
-         </div>
-      </div>
+      <Grid
+         container
+         direction="column"
+         justify="center"
+         alignItems="center"
+         spacing={0}
+         style={{ minHeight: '100vh', width: 750, margin: 'auto' }}
+      >
+         {audienceGrid && (
+            <Audience audienceGrid={audienceGrid} userSeats={userSeats} bookSeat={bookSeat} />
+         )}
+         <AudienceFooter handleReservation={handleReservation} />
+      </Grid>
    );
 };
 
