@@ -6,6 +6,7 @@ export const seatsSlice = createSlice({
       loading: false,
       hasErrors: false,
       seats: [],
+      userSeats: [],
    },
    reducers: {
       getSeats: (state) => {
@@ -20,10 +21,14 @@ export const seatsSlice = createSlice({
          state.loading = false;
          state.hasErrors = false;
       },
+      setUserBookedSeats: (state, action) => {
+         state.userSeats = action.payload;
+      },
    },
 });
 
-export const { getSeats, getSeatsFailure, getSeatsSuccess } = seatsSlice.actions;
+export const { getSeats, getSeatsFailure, getSeatsSuccess, setUserBookedSeats } =
+   seatsSlice.actions;
 
 export const seatsSelector = (state) => state.seats;
 

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
+import { seatsSelector, setUserBookedSeats } from '../../redux/slices/seatsSlice';
+import Grid from '@material-ui/core/Grid';
 import Audience from '../../components/Audience';
 import AudienceFooter from '../../components/AudienceFooter';
-import { seatsSelector } from '../../redux/slices/seatsSlice';
-import Grid from '@material-ui/core/Grid';
-import { useHistory } from 'react-router';
 
 const Reservation = () => {
+   const history = useHistory();
+   const dispatch = useDispatch();
    const userPreferences = useSelector((state) => state.userPreferences);
    const { seats, loading, hasErrors } = useSelector(seatsSelector);
    const [audienceGrid, setAudienceGrid] = useState();
    const [userSeats, setUserSeats] = useState([]);
-   const history = useHistory();
 
    useEffect(() => {
       createAudienceGrid();
@@ -43,8 +44,8 @@ const Reservation = () => {
       if (seats) {
          let audience;
 
-         const i = 10;
-         const j = 15;
+         const i = Math.max(...seats.map((seat) => seat.cords.x)) + 1;
+         const j = Math.max(...seats.map((seat) => seat.cords.y)) + 1;
          audience = Array(i)
             .fill()
             .map(() => Array(j).fill(undefined));
@@ -84,6 +85,7 @@ const Reservation = () => {
 
    const handleReservation = () => {
       history.push('/summary');
+      dispatch(setUserBookedSeats(userSeats));
    };
 
    return (

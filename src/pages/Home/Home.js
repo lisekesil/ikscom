@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 const Home = () => {
    const history = useHistory();
    const dispatch = useDispatch();
-   const { seats, loading, hasErrors } = useSelector(seatsSelector);
+   const { seats } = useSelector(seatsSelector);
    const classes = useStyles();
 
    useEffect(() => {
