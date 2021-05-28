@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 
-const Audience = ({ audienceGrid, userSeats, bookSeat }) => {
+const Audience = ({ audienceGrid, userSeats, switchSeat }) => {
    const cols = Math.max(...audienceGrid.map((seat) => seat.cords.y)) + 1;
    const rows = Math.max(...audienceGrid.map((seat) => seat.cords.x)) + 1;
    return (
@@ -16,7 +16,7 @@ const Audience = ({ audienceGrid, userSeats, bookSeat }) => {
          {audienceGrid.map((seat) => {
             return (
                <Paper
-                  onClick={() => bookSeat(seat)}
+                  onClick={() => switchSeat(seat)}
                   key={seat.id}
                   style={{
                      gridRow: `${seat.cords.x + 1}`,

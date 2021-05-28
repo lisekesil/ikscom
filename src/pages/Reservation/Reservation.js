@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { seatsSelector, setUserBookedSeats } from '../../redux/slices/seatsSlice';
+
 import { randomizeUserSeats, closeUserSeats } from '../../utils/functions';
+
 import Grid from '@material-ui/core/Grid';
 import Audience from '../../components/Audience';
 import AudienceFooter from '../../components/AudienceFooter';
@@ -12,7 +14,6 @@ const Reservation = () => {
    const dispatch = useDispatch();
    const userPreferences = useSelector((state) => state.userPreferences);
    const { seats, loading, hasErrors } = useSelector(seatsSelector);
-   const [audienceGrid, setAudienceGrid] = useState();
    const [userSeats, setUserSeats] = useState([]);
 
    useEffect(() => {
@@ -25,7 +26,7 @@ const Reservation = () => {
       }
    }, [seats]);
 
-   const bookSeat = (seat) => {
+   const switchSeat = (seat) => {
       if (seat.reserved) {
          alert('To miejsce jest zarezerwowane');
          return;
@@ -45,12 +46,13 @@ const Reservation = () => {
       }
    };
 
-   const handleReservation = () => {
+   const handleReservationSubmit = () => {
       if (userSeats.length < userPreferences.numOfSeats) {
          alert(`Wybierz zadeklarowaną liczbę miejsc: ${userPreferences.numOfSeats}`);
          return;
       }
-      dispatch(setUserBookedSeats(userSeats));
+      const sortedUserSeats = userSeats.sort((s1, s2) => s1.cords.x - s2.cords.x);
+      dispatch(setUserBookedSeats(sortedUserSeats));
       history.push('/summary');
    };
 
@@ -65,8 +67,8 @@ const Reservation = () => {
       >
          {loading && <div>Ładowanie...</div>}
          {hasErrors && <div>Wystąpił błąd. Nie można wyświetlić danych.</div>}
-         {seats && <Audience audienceGrid={seats} userSeats={userSeats} bookSeat={bookSeat} />}
-         <AudienceFooter handleReservation={handleReservation} />
+         {seats && <Audience audienceGrid={seats} userSeats={userSeats} switchSeat={switchSeat} />}
+         <AudienceFooter handleReservation={handleReservationSubmit} />
       </Grid>
    );
 };
