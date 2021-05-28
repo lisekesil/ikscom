@@ -47,7 +47,7 @@ const Home = () => {
    const formik = useFormik({
       initialValues: {
          numOfSeats: '',
-         checkbox: false,
+         areClose: false,
       },
       validationSchema: yup.object({
          numOfSeats: yup
@@ -58,11 +58,16 @@ const Home = () => {
                seats.filter((s) => !s.reserved).length,
                `Liczba wolnych miejsc: ${seats.filter((s) => !s.reserved).length}`,
             ),
+         areClose: yup.boolean(),
       }),
       onSubmit: (values) => {
+         if (values.areClose && values.numOfSeats > 5) {
+            alert('Mamy tylko 5 miejsc obok siebie w jednym rzędzie');
+            return;
+         }
          const pref = {
             numOfSeats: Number(values.numOfSeats),
-            areClose: values.checkbox,
+            areClose: values.areClose,
          };
          dispatch(setPreferences(pref));
          history.push('/reservation');
@@ -87,7 +92,6 @@ const Home = () => {
                </Grid>
                <Grid item>
                   <TextField
-                     id="outlined-number"
                      name="numOfSeats"
                      variant="outlined"
                      value={formik.values.numOfSeats}
@@ -105,7 +109,7 @@ const Home = () => {
                   <Checkbox
                      checked={formik.values.checkbox}
                      onChange={formik.handleChange}
-                     name="checkbox"
+                     name="areClose"
                   />
                }
                label="Czy miejsca mają być obok siebie?"
